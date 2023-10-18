@@ -1,4 +1,13 @@
+using RedMango_Api.Extensions;
+using RedMango_Api.Services.Contracts;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Add our own services
+builder.Services.AddMyAppServices(builder.Configuration);
+builder.Services.AddMyIdentityServices(builder.Configuration);
+builder.Services.AddSwaggerDocumentation();
 
 // Add services to the container.
 
@@ -12,14 +21,29 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerDocumentation();
 }
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
+app.UseCors("CorsPolicyAllowAll");
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+SeedDatabase();
 
 app.MapControllers();
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDBInitializer>();
+        dbInitializer.InitializeAsync();
+    }
+}
