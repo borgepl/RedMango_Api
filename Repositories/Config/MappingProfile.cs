@@ -9,10 +9,12 @@ namespace Repositories.Config
         public MappingProfile()
         {
             CreateMap<MenuItemDTO, MenuItem>().ReverseMap();
-            
+            CreateMap<CartItemDTO, CartItem>().ReverseMap();
+            CreateMap<ShoppingCartDTO, ShoppingCart>().ReverseMap();
+
             //CreateMap<RoomOrderDetails, RoomOrderDetailsDTO>()
             //    .ForMember(x=> x.HotelRoomDTO, opt => opt.MapFrom(c => c.HotelRoom));
-            
+
         }
     }
 }

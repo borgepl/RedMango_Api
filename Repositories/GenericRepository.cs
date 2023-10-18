@@ -86,6 +86,7 @@ namespace Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+
         public async Task UpdateAsync(T entity)
         {
             //_context.Update(entity);

@@ -27,7 +27,7 @@ namespace RedMango_Api.Extensions
             services.AddAutoMapper(typeof(MappingProfile));
            
             services.AddScoped<IMenuItemRepository, MenuItemRepository>();
-
+            services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
 
             services.AddCors(opt =>
