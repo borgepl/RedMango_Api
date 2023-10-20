@@ -28,6 +28,7 @@ namespace RedMango_Api.Extensions
            
             services.AddScoped<IMenuItemRepository, MenuItemRepository>();
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
 
             services.AddCors(opt =>
