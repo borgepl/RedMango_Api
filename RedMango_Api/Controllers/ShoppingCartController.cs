@@ -31,15 +31,23 @@ namespace RedMango_Api.Controllers
         {
             try
             {
+                ShoppingCart shoppingCart;
+
                 if (string.IsNullOrEmpty(userId)) {
 
-                    _response.IsSuccess = false;
-                    _response.ErrorMessages = new List<string>() { "Bad Request - User not specified!" };
-                    _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                    return BadRequest(_response);
+                    //_response.IsSuccess = false;
+                    //_response.ErrorMessages = new List<string>() { "Bad Request - User not specified!" };
+                    //_response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                    //return BadRequest(_response);
+                    shoppingCart = new();
+
+                } 
+                else
+                {
+                    shoppingCart = await _shoppingCartRepository.GetAsync(u => u.UserId == userId, "CartItems.MenuItem");
+
                 }
-                ShoppingCart shoppingCart = await _shoppingCartRepository.GetAsync(u => u.UserId == userId,"CartItems.MenuItem");
-                
+
                 if (shoppingCart.CartItems != null && shoppingCart.CartItems.Count() > 0) 
                 {
                     shoppingCart.CartTotal = shoppingCart.CartItems.Sum(u => u.Quantity * u.MenuItem!.Price);

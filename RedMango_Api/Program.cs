@@ -33,6 +33,8 @@ app.UseCors("CorsPolicyAllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseStripe(builder.Configuration);
+
 SeedDatabase();
 
 app.MapControllers();

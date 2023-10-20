@@ -6,6 +6,7 @@ using RedMango_Api.Services;
 using Repositories;
 using Repositories.Config;
 using Repositories.Contracts;
+using Stripe;
 
 namespace RedMango_Api.Extensions
 {
@@ -46,12 +47,12 @@ namespace RedMango_Api.Extensions
             return services;
         }
 
-        //public static IApplicationBuilder UseStripe(this IApplicationBuilder app, IConfiguration config )
-        //{
-        //    StripeConfiguration.ApiKey = config.GetSection("Stripe")["ApiKey"];
+        public static IApplicationBuilder UseStripe(this IApplicationBuilder app, IConfiguration config)
+        {
+            StripeConfiguration.ApiKey = config.GetSection("Stripe")["ApiKey"];
 
-        //    return app;
-        //}
+            return app;
+        }
 
     }
 }
