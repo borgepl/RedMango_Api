@@ -35,16 +35,16 @@ namespace RedMango_Api.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RegistrationResponseDTO), StatusCodes.Status400BadRequest )]
         public async Task<IActionResult> Register([FromBody] UserRequestDTO userRequestDTO)
         {
             if (userRequestDTO == null || !ModelState.IsValid)
             {
-                return BadRequest(new ApiResponse 
-                    {   IsSuccess = false, 
-                        StatusCode = System.Net.HttpStatusCode.BadRequest,
-                        ErrorMessages = new List<string>() { "Bad Request - Cannot sign you up" }
+                return BadRequest(new RegistrationResponseDTO 
+                    {   IsRegisterationSuccessful = false, 
+                        Errors = new List<string>() { "Bad Request - Cannot sign you up" }
 
                 });
             }
@@ -52,11 +52,10 @@ namespace RedMango_Api.Controllers
             ApplicationUser userFromDb = await _userManager.FindByEmailAsync(userRequestDTO.Email);
             if (userFromDb != null)
             {
-                return BadRequest(new ApiResponse
+                return BadRequest(new RegistrationResponseDTO
                 {
-                    IsSuccess = false,
-                    StatusCode = System.Net.HttpStatusCode.BadRequest,
-                    ErrorMessages = new List<string>() { "Bad Request - User already exists!" }
+                    IsRegisterationSuccessful = false,
+                    Errors = new List<string>() { "Bad Request - User already exists!" }
 
                 });
             }
@@ -85,7 +84,7 @@ namespace RedMango_Api.Controllers
                 return BadRequest(new RegistrationResponseDTO
                 { Errors = errors, IsRegisterationSuccessful = false });
             }
-            return StatusCode(201);
+            return Ok(new RegistrationResponseDTO { IsRegisterationSuccessful = true});
         }
 
         [HttpPost]
