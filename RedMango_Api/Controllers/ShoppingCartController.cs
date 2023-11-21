@@ -45,6 +45,10 @@ namespace RedMango_Api.Controllers
                 else
                 {
                     shoppingCart = await _shoppingCartRepository.GetAsync(u => u.UserId == userId, "CartItems.MenuItem");
+                    if (shoppingCart == null)
+                    {
+                        shoppingCart = new();
+                    }
 
                 }
 
@@ -105,7 +109,7 @@ namespace RedMango_Api.Controllers
             {
                 // Shopping Cart already exist -  add Cartitem or update CartItem
 
-                CartItem cartItemInShoppingCart = shoppingCart.CartItems.FirstOrDefault(x => x.MenuItemId == menuItemId);
+                CartItem cartItemInShoppingCart = shoppingCart!.CartItems.FirstOrDefault(x => x.MenuItemId == menuItemId);
                 if (cartItemInShoppingCart == null)
                 {
                     // Item does not exist in shopping cart
