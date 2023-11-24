@@ -25,6 +25,11 @@ namespace RedMango_Api.Extensions
             var appSettingsSection = config.GetSection("APISettings");
             services.Configure<APISettings>(appSettingsSection);
 
+            var appAISettingsSection = config.GetSection("OpenAI");
+            services.Configure<OpenAISettings>(appAISettingsSection);
+
+            services.AddScoped<IOpenAIService, OpenAIService>();
+
             services.AddAutoMapper(typeof(MappingProfile));
            
             services.AddScoped<IMenuItemRepository, MenuItemRepository>();
