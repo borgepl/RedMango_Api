@@ -50,5 +50,14 @@ namespace RedMango_Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("CreateEmbeddings")]
+        public async Task<IActionResult> CreateEmbeddings(string text)
+        {
+            var result = await _openAIService.CreateEmbeddings(text);
+
+            return Ok(result[0].Embedding);
+        }
     }
 }

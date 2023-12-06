@@ -2,6 +2,7 @@
 using Common;
 using DataAccess.Data.Domain;
 using DataAccess.Data.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -30,6 +31,7 @@ namespace RedMango_Api.Controllers
 
         
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<ApiResponse>> GetOrders(string? userId)
         {
             try

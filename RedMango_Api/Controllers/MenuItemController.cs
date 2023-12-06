@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common;
 using DataAccess.Data.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ namespace RedMango_Api.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<ActionResult<ApiResponse>> GetMenuItems() 
         {
             _response.Result =  _mapper.Map<List<MenuItemDTO>>(await _menuItemRepository.GetAllAsync());
@@ -63,6 +64,7 @@ namespace RedMango_Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<ActionResult<ApiResponse>> CreateMenuItem([FromForm] MenuItemCreateDTO menuItemCreateDTO)
         {
             try
@@ -111,6 +113,7 @@ namespace RedMango_Api.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<ActionResult<ApiResponse>> UpdateMenuItem(int id, [FromForm] MenuItemUpdateDTO menuItemUpdateDTO )
         {
             try
@@ -172,6 +175,7 @@ namespace RedMango_Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<ActionResult<ApiResponse>> DeleteMenuItem(int id)
         {
             try

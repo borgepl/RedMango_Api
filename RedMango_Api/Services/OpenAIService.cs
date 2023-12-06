@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using OpenAI_API.Completions;
+using OpenAI_API.Embedding;
 using OpenAI_API.Images;
 using OpenAI_API.Models;
 using RedMango_Api.Config;
 using RedMango_Api.Services.Contracts;
+using System.Numerics;
 
 namespace RedMango_Api.Services
 {
@@ -54,6 +56,17 @@ namespace RedMango_Api.Services
             return result.Completions[0].Text;
         }
 
+        public async Task<List<OpenAI_API.Embedding.Data>> CreateEmbeddings(string text)
+        {
+            // create API instance
+            var api = new OpenAI_API.OpenAIAPI(_openAISettings.Key);
+
+            var result = await api.Embeddings.CreateEmbeddingAsync(new EmbeddingRequest(text));
+
+            
+            return result.Data; ;
+        }
+
         public async Task<string> CreateImage(string text)
         {
             // create API instance
@@ -63,5 +76,7 @@ namespace RedMango_Api.Services
 
             return result.Data[0].Url;
         }
+
+
     }
 }

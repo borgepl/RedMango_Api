@@ -8,6 +8,7 @@ namespace RedMango_Api.Services.Contracts
         Task<string> CompleteSentenceAdvanced(string text);
         Task<string> CheckProgrammingLanguage(string language);
         Task<string> CreateImage(string text);
+        Task<List<OpenAI_API.Embedding.Data>> CreateEmbeddings(string text);
 
     }
 }
