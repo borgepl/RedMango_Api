@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.DTO.Order;
 using Repositories.Contracts;
+using System.Drawing;
+using System.Text.Json;
 
 namespace RedMango_Api.Controllers
 {
@@ -32,29 +34,48 @@ namespace RedMango_Api.Controllers
         
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<ApiResponse>> GetOrders(string? userId)
+        public async Task<ActionResult<ApiResponse>> GetOrders(string? userId, string? searchString, string? status,
+            int pageNumber=1, int pageSize=5)
         {
             try
-            {   if (!string.IsNullOrEmpty(userId))
+            {
+                IEnumerable<OrderHeader> orderHeaders =
+                       await _orderRepository.GetAllFilteredAsync(u => u.OrderHeaderId != 0, "OrderDetails.MenuItem");
+                orderHeaders.OrderByDescending(u => u.OrderHeaderId).ToList();
+
+                if (!string.IsNullOrEmpty(userId))
                 {
-                    var orderHeaders = 
+                     orderHeaders = 
                         await _orderRepository.GetAllFilteredAsync(u => u.ApplicationUserId == userId, "OrderDetails.MenuItem");
                     orderHeaders.OrderByDescending(u => u.OrderHeaderId).ToList();
 
                     var user = await _userManager.FindByIdAsync(userId);
-                    var ordersToReturn = _mapper.Map<IList<OrderHeaderDTO>>(orderHeaders);
-
-                    _response.Result = ordersToReturn;
+                    
                 }
-                else
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    var orderHeaders =
-                        await _orderRepository.GetAllAsync();
-                    orderHeaders.OrderByDescending(u => u.OrderHeaderId).ToList();
-
-                    _response.Result = _mapper.Map<IList<OrderHeaderDTO>>(orderHeaders); ;
+                    orderHeaders = orderHeaders.Where(u => u.PickupPhoneNumber.Contains(searchString) 
+                    || u.PickupEmail.Contains(searchString) || u.PickupName.Contains(searchString));
                 }
+                if (!string.IsNullOrEmpty(status))
+                {
+                    orderHeaders = orderHeaders.Where(u => u.Status.ToLower() == status.ToLower());
+                }
+
+                Pagination pagination = new()
+                {
+                    CurrentPage = pageNumber,
+                    PageSize = pageSize,
+                    TotalRecords = orderHeaders.Count()
+                };
+
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagination));
+
+                orderHeaders = orderHeaders.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+                _response.Result = _mapper.Map<IList<OrderHeaderDTO>>(orderHeaders); ;
                 _response.StatusCode = System.Net.HttpStatusCode.OK;
+
                 return Ok(_response);
 
 

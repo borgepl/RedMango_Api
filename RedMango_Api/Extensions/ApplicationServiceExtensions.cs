@@ -41,7 +41,7 @@ namespace RedMango_Api.Extensions
             {
                 opt.AddPolicy("CorsPolicyAllowAll", policy =>
                 {
-                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*");
                     // .WithOrigins("http://localhost:4200")
                     // .WithOrigins("");
                 });
